@@ -1,11 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm';
+import { Customer } from 'src/customers/entity/customers.entity';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne } from 'typeorm';
 
 @Entity()
 export class Transaction {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @ManyToOne(() => Customer, (customer) => customer.id)
   customer_id: number;
 
   @Column()
@@ -13,4 +14,5 @@ export class Transaction {
 
   @CreateDateColumn()
   created_date: Date;
+
 }

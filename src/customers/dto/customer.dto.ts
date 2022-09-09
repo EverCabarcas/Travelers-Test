@@ -1,11 +1,11 @@
-import { IsString, MinLength, MaxLength} from 'class-validator';
+import { IsString, Min, Max, IsInt} from 'class-validator';
 
 export class CustomerDto {
   @IsString()
   name: string;
 
-  @IsString()
-  @MinLength(10)
-  @MaxLength(10)
-  telephone: string;
+  @IsInt()
+  @Min(1000000000)
+  @Max(9999999999)
+  telephone: number;
 }

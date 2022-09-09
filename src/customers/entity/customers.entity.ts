@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm';
+import { Transaction } from 'src/transactions/entity/transactions.entity';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany } from 'typeorm';
 
 @Entity()
 export class Customer {
@@ -9,8 +10,11 @@ export class Customer {
   name: string;
 
   @Column()
-  telephone: string;
+  telephone: number;
 
   @CreateDateColumn()
   created_date: Date;
+
+  @OneToMany(() => Transaction, (transaction) => transaction.customer_id)
+  transactions: Transaction[]
 }

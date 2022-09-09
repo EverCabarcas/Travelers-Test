@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Transaction } from 'src/transactions/entity/transactions.entity';
 import { Repository, DataSource } from 'typeorm';
 import { CustomerDto } from '../dto/customer.dto';
 import { Customer } from '../entity/customers.entity';
@@ -27,5 +28,24 @@ export class CustomersService {
 
   async findOne(id: number): Promise<Customer> {
     return await this.customerRepository.findOneBy({ id });
+  }
+
+  async findCustomerTransactions(id: number): Promise<Customer> {
+    // const customer_id = id
+    // return this.dataSource
+    //   .createQueryBuilder(Transaction, 'transaction')
+    //   .leftJoinAndSelect("transaction.customer", "customer", "customer.id = :customer_id", { customer_id })
+    //   .orderBy('transactions.id', 'DESC')
+    //   .take(3)
+    //   .getMany();
+
+    return await this.customerRepository.findOne({
+      where: {
+        id: id
+      },
+      relations: {
+          transactions: true,
+      },
+  });
   }
 }
