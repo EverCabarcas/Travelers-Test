@@ -20,8 +20,8 @@ export class TransactionsService {
       return await this.transactionRepository.save(transaction);
     }
     throw new HttpException({
-      status: HttpStatus.NOT_FOUND,
+      status: HttpStatus.BAD_REQUEST,
       error: 'customer_id should exists',
-    }, HttpStatus.NOT_FOUND);
+    }, HttpStatus.BAD_REQUEST);
   }
 }

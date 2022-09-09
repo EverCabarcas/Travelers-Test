@@ -31,21 +31,29 @@ export class CustomersService {
   }
 
   async findCustomerTransactions(id: number): Promise<Customer> {
-    // const customer_id = id
-    // return this.dataSource
-    //   .createQueryBuilder(Transaction, 'transaction')
-    //   .leftJoinAndSelect("transaction.customer", "customer", "customer.id = :customer_id", { customer_id })
-    //   .orderBy('transactions.id', 'DESC')
-    //   .take(3)
-    //   .getMany();
+    const customerInformation = await this.dataSource
+      .createQueryBuilder(Customer, 'customer')
+      .leftJoinAndSelect(
+        'customer.transactions',
+        'transactions',
+        'transactions.customer_id = :id',
+        { id },
+      )
+      .where('transactions.customer_id = :id', { id })
+      .orderBy('transactions.id', 'DESC')
+      .getOne();
 
-    return await this.customerRepository.findOne({
-      where: {
-        id: id
-      },
-      relations: {
-          transactions: true,
-      },
-  });
+    return this.mapFindCustomerTransactionsResponse(customerInformation);
+  }
+
+  private mapFindCustomerTransactionsResponse(
+    customerInformation: Customer,
+  ): Customer {
+    customerInformation.transactions = customerInformation.transactions.slice(
+      0,
+      10,
+    );
+
+    return customerInformation;
   }
 }
