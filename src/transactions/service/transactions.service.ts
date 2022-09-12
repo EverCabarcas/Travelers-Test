@@ -11,7 +11,6 @@ export class TransactionsService {
     @InjectRepository(Transaction)
     private transactionRepository: Repository<Transaction>,
     private customerService:CustomersService,
-    private dataSource: DataSource,
   ) {}
 
   async create(transaction: TransactionDto): Promise<Transaction> {

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Transaction } from 'src/transactions/entity/transactions.entity';
 import { Repository, DataSource } from 'typeorm';
@@ -9,7 +9,7 @@ import { Customer } from '../entity/customers.entity';
 export class CustomersService {
   constructor(
     @InjectRepository(Customer)
-    private customerRepository: Repository<Customer>,
+    public  customerRepository: Repository<Customer>,
     private dataSource: DataSource,
   ) {}
 
@@ -31,7 +31,8 @@ export class CustomersService {
   }
 
   async findCustomerTransactions(id: number): Promise<Customer> {
-    const customerInformation = await this.dataSource
+    try {
+      const customerInformation = await this.dataSource
       .createQueryBuilder(Customer, 'customer')
       .leftJoinAndSelect(
         'customer.transactions',
@@ -44,6 +45,13 @@ export class CustomersService {
       .getOne();
 
     return this.mapFindCustomerTransactionsResponse(customerInformation);
+      
+    } catch (error) {
+      throw new HttpException({
+        status: HttpStatus.BAD_REQUEST,
+        error: 'customer_id should exists',
+      }, HttpStatus.BAD_REQUEST);
+    }
   }
 
   private mapFindCustomerTransactionsResponse(
